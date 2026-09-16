@@ -5,13 +5,1339 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SRT Khmer AI Studio | កម្មវិធីបកប្រែ Subtitle ទៅជាភាសាខ្មែរ</title>
   <meta name="description" content="កម្មវិធីបកប្រែឯកសារអត្ថបទរឿង SRT / VTT ទៅជាភាសាខ្មែរសុទ្ធ ១០០% សម្រាប់បញ្ចូលសំឡេងរឿងភាគ រក្សា Timecode ត្រឹមត្រូវ">
-  
-  <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+  
+  <!-- Embedded Ultra-Modern Design System (100% Self-Contained) -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      /* Dark Mode Palette (Obsidian Studio Default) */
+      --bg-body: #090d16;
+      --bg-surface: rgba(16, 23, 38, 0.75);
+      --bg-surface-solid: #101726;
+      --bg-surface-elevated: rgba(26, 36, 56, 0.65);
+      --bg-surface-hover: rgba(38, 51, 78, 0.5);
+      --bg-input: #0b111e;
+      --bg-glass: rgba(16, 23, 38, 0.85);
+
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.04);
+      --border-focus: #6366f1;
+      --border-glow: rgba(99, 102, 241, 0.35);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-khmer: #f1f5f9;
+
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      
+      --accent-cyan: #06b6d4;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.25);
+      --accent-emerald: #10b981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.2);
+      --accent-rose: #f43f5e;
+      --accent-amber: #f59e0b;
+
+      --radius-xs: 6px;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45);
+      --shadow-glow: 0 0 35px rgba(99, 102, 241, 0.2);
+
+      --font-main: 'Plus Jakarta Sans', 'Kantumruy Pro', -apple-system, sans-serif;
+      --font-khmer: 'Kantumruy Pro', 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f4f6fb;
+      --bg-surface: rgba(255, 255, 255, 0.9);
+      --bg-surface-solid: #ffffff;
+      --bg-surface-elevated: rgba(240, 244, 252, 0.85);
+      --bg-surface-hover: rgba(230, 237, 250, 0.9);
+      --bg-input: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.95);
+
+      --border-color: rgba(15, 23, 42, 0.08);
+      --border-subtle: rgba(15, 23, 42, 0.04);
+      --border-focus: #6366f1;
+      --border-glow: rgba(99, 102, 241, 0.2);
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --text-khmer: #1e293b;
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+      --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.12);
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-khmer);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.7;
+      overflow-x: hidden;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+    }
+
+    .glow-1 {
+      top: -100px;
+      left: 10%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.35), transparent 70%);
+    }
+
+    .glow-2 {
+      top: 150px;
+      right: 5%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.25), transparent 70%);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* Layout */
+    .app-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 24px 80px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .studio-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .glass-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    /* Top Nav */
+    .studio-navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 22px;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #818cf8;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .sample-btn {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+    }
+
+    .sample-btn:hover {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: #818cf8;
+    }
+
+    /* Top 2-Column Workbench */
+    .top-workbench-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1024px) {
+      .top-workbench-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel-card {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      font-size: 22px;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--accent-emerald);
+    }
+
+    .indicator-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 6px var(--accent-emerald);
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-action-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.88rem;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .key-input {
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+      font-size: 0.82rem;
+    }
+
+    /* Import Tabs & Dropzone */
+    .import-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-input);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-pill:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-pill.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .modern-dropzone {
+      border: 2px dashed rgba(99, 102, 241, 0.28);
+      border-radius: var(--radius-lg);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(99, 102, 241, 0.02);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modern-dropzone:hover, .modern-dropzone.drag-over {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+    }
+
+    .drop-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: var(--transition);
+    }
+
+    .modern-dropzone:hover .drop-circle {
+      transform: scale(1.1);
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .drop-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drop-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 90%;
+      margin: 0 auto;
+    }
+
+    .supported-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    .ext-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--accent-cyan);
+    }
+
+    .paste-textarea {
+      width: 100%;
+      height: 140px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      resize: vertical;
+      transition: var(--transition);
+    }
+
+    .paste-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .paste-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .main-action-area {
+      margin-top: 4px;
+    }
+
+    .btn-translate-hero {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, #4f46e5, #6366f1, #06b6d4);
+      background-size: 200% 200%;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .btn-translate-hero:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-translate-hero:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-hero-icon {
+      font-size: 24px;
+    }
+
+    .btn-hero-text {
+      text-align: left;
+    }
+
+    .btn-hero-title {
+      display: block;
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .btn-hero-sub {
+      display: block;
+      font-size: 0.74rem;
+      opacity: 0.85;
+    }
+
+    /* Live Progress */
+    .progress-dashboard {
+      padding: 16px 20px;
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.28);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .progress-lead {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .glow-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(99, 102, 241, 0.25);
+      border-top-color: #818cf8;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .progress-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .progress-detail {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .progress-percentage {
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .progress-track-wrapper {
+      width: 100%;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Subtitle Editor Workspace */
+    .workspace-studio-section {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .studio-toolbar-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .toolbar-left-group, .toolbar-right-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .counter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .counter-chip .chip-val {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .counter-chip.success-chip .chip-val {
+      color: var(--accent-emerald);
+    }
+
+    .tool-search-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+    }
+
+    .tool-search-box .tool-input {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.82rem;
+      padding: 4px;
+      width: 110px;
+    }
+
+    .tool-search-box .tool-input:focus {
+      outline: none;
+    }
+
+    .tool-search-box .search-icon, .tool-search-box .arrow-icon {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .tool-shift-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .shift-input-sm {
+      width: 70px;
+      padding: 5px 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xs);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+    }
+
+    /* Subtitle Stream Table */
+    .cue-table-header {
+      display: grid;
+      grid-template-columns: 55px 160px 1.1fr 1.3fr 75px;
+      gap: 14px;
+      padding: 8px 18px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 960px) {
+      .cue-table-header {
+        display: none;
+      }
+    }
+
+    .subtitle-stream-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 700px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .cue-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: 55px 160px 1.1fr 1.3fr 75px;
+      gap: 14px;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .cue-card:hover {
+      border-color: rgba(99, 102, 241, 0.35);
+      background: var(--bg-surface-elevated);
+    }
+
+    @media (max-width: 960px) {
+      .cue-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+
+    .cue-index {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .cue-timecode {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cue-time-badge {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.08);
+      padding: 2px 7px;
+      border-radius: 5px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .cue-source {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .cue-translation-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      color: var(--text-khmer);
+      font-family: var(--font-khmer);
+      font-size: 0.94rem;
+      line-height: 1.7;
+      resize: vertical;
+      min-height: 44px;
+      transition: var(--transition);
+    }
+
+    .cue-translation-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--bg-surface-solid);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    .cue-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #ffffff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-surface-hover);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-accent {
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--accent-cyan);
+    }
+
+    .btn-accent:hover:not(:disabled) {
+      background: rgba(6, 182, 212, 0.22);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: var(--accent-rose);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #f43f5e;
+      color: #ffffff;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+    }
+
+    .btn-xs {
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      border-radius: var(--radius-xs);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-lg {
+      padding: 12px 24px;
+      font-size: 0.98rem;
+      border-radius: var(--radius-md);
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 5px;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-elevated);
+    }
+
+    .icon-btn.delete:hover {
+      color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.15);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      background: var(--bg-surface-solid);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+      transform: scale(0.96);
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open .modal-dialog {
+      transform: scale(1);
+    }
+
+    .modal-dialog-lg {
+      max-width: 820px;
+    }
+
+    .modal-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+
+    .modal-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-icon {
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(99, 102, 241, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .modal-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface-elevated);
+    }
+
+    .export-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .export-option-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      transition: var(--transition);
+      gap: 12px;
+    }
+
+    .export-option-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      background: var(--bg-surface-hover);
+      transform: translateY(-1px);
+    }
+
+    .export-option-card.primary-export {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .export-card-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .export-card-info {
+      flex: 1;
+    }
+
+    .export-card-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .export-card-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .export-action-arrow {
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    /* Video Theater */
+    .player-theater-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .theater-screen {
+      position: relative;
+      background: #000000;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .theater-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .theater-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #090d16, #141c2c);
+      color: var(--text-muted);
+      gap: 6px;
+    }
+
+    .theater-icon {
+      font-size: 40px;
+    }
+
+    .theater-title {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .theater-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .subtitle-overlay-box {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      text-align: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .subtitle-caption {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.85);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: var(--font-khmer);
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.5;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      max-width: 90%;
+      word-wrap: break-word;
+    }
+
+    .theater-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theater-time {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      color: var(--accent-cyan);
+    }
+
+    .theater-slider {
+      flex: 1;
+      accent-color: var(--primary);
+    }
+
+    .theater-picker-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Toasts */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--bg-surface-solid);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      pointer-events: auto;
+      animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-width: 420px;
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--accent-emerald);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--accent-rose);
+    }
+
+    .toast.info {
+      border-left: 4px solid var(--primary);
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 768px) {
+      .studio-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .studio-toolbar-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Background Ambient Glow -->
+  <!-- Ambient Glow -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
@@ -21,7 +1347,7 @@
     <header class="studio-navbar">
       <div class="nav-brand">
         <div class="brand-logo">
-          <span class="logo-emoji">🎬</span>
+          <span>🎬</span>
         </div>
         <div class="brand-info">
           <div class="brand-title-row">
@@ -33,21 +1359,21 @@
 
       <div class="nav-controls">
         <button class="nav-btn sample-btn" id="loadSampleBtn" title="ផ្ទុកអត្ថបទរឿងភាគចិនគំរូ 35 ជួរ">
-          <span class="btn-icon">✨</span>
-          <span class="btn-label">អត្ថបទគំរូ (Sample)</span>
+          <span>✨</span>
+          <span>អត្ថបទគំរូ (Sample)</span>
         </button>
 
         <button class="nav-btn theme-btn" id="themeToggleBtn" title="ប្ដូរពន្លឺ / ងងឹត">
-          <span class="btn-icon">🌙</span>
-          <span class="btn-label">ងងឹត</span>
+          <span>🌙</span>
+          <span>ងងឹត</span>
         </button>
       </div>
     </header>
 
-    <!-- Main Workspace Grid -->
+    <!-- Main Workspace -->
     <main class="studio-main">
       
-      <!-- Top Grid: Configuration & File Import in balanced 2-column layout -->
+      <!-- Top 2-Column Dashboard -->
       <section class="top-workbench-grid">
         
         <!-- Panel 1: Google Gemini AI Settings -->
@@ -192,7 +1518,7 @@
 
       </section>
 
-      <!-- Live Progress Bar -->
+      <!-- Live Progress Dashboard -->
       <section class="glass-card progress-dashboard" id="progressCard" style="display: none;">
         <div class="progress-info-row">
           <div class="progress-lead">
@@ -211,21 +1537,21 @@
         </div>
       </section>
 
-      <!-- Subtitle Editor & Dubbing Studio Workspace -->
+      <!-- Subtitle Editor Workspace -->
       <section class="workspace-studio-section" id="workspaceCard" style="display: none;">
         
         <!-- Studio Toolbar -->
         <div class="glass-card studio-toolbar-card">
           <div class="toolbar-left-group">
             <div class="counter-chip">
-              <span class="chip-label">ចំនួនសរុប:</span>
+              <span>ចំនួនសរុប:</span>
               <span class="chip-val" id="totalCuesCount">0</span>
-              <span class="chip-unit">ជួរ</span>
+              <span>ជួរ</span>
             </div>
             <div class="counter-chip success-chip">
-              <span class="chip-label">បានបកប្រែ:</span>
+              <span>បានបកប្រែ:</span>
               <span class="chip-val" id="translatedCount">0</span>
-              <span class="chip-unit">ជួរ</span>
+              <span>ជួរ</span>
             </div>
 
             <!-- Search & Replace -->
@@ -241,7 +1567,7 @@
           <div class="toolbar-right-group">
             <!-- Time Shift -->
             <div class="tool-shift-box">
-              <span class="shift-label">⏱️ រំកិលម៉ោង:</span>
+              <span>⏱️ រំកិលម៉ោង:</span>
               <input type="number" id="shiftTimeInput" step="0.5" placeholder="+/-s" class="shift-input-sm">
               <button class="btn btn-secondary btn-xs" id="shiftTimeBtn">កែ</button>
             </div>
@@ -257,14 +1583,14 @@
 
         <!-- Subtitles List Table Header -->
         <div class="cue-table-header">
-          <div class="col-th th-id">#</div>
-          <div class="col-th th-time">Timecode</div>
-          <div class="col-th th-source">ភាសាដើម (Original)</div>
-          <div class="col-th th-target">ភាសាខ្មែរ (Khmer Dubbing)</div>
-          <div class="col-th th-actions">សកម្មភាព</div>
+          <div>#</div>
+          <div>Timecode</div>
+          <div>ភាសាដើម (Original)</div>
+          <div>ភាសាខ្មែរ (Khmer Dubbing)</div>
+          <div>សកម្មភាព</div>
         </div>
 
-        <!-- Subtitles List Table Body -->
+        <!-- Subtitles List Stream -->
         <div class="subtitle-stream-list" id="cueList">
           <!-- Rendered by JS -->
         </div>
@@ -367,12 +1693,1471 @@
     </div>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Toast Notifications Container -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Application Scripts -->
-  <script src="js/srt-parser.js"></script>
-  <script src="js/translator.js"></script>
-  <script src="js/app.js"></script>
+  <!-- =========================================================================
+       Embedded Javascript Logic (SRTParser, Translator, App)
+       ========================================================================= -->
+  <script>
+    /* ------------------- 1. SRT Parser Module ------------------- */
+    class SRTParser {
+      static timeToMs(timeString) {
+        if (!timeString) return 0;
+        const cleanStr = timeString.trim().replace('.', ',');
+        const parts = cleanStr.split(':');
+        if (parts.length < 2) return 0;
+
+        let hours = 0, minutes = 0, seconds = 0, ms = 0;
+
+        if (parts.length === 3) {
+          hours = parseInt(parts[0], 10) || 0;
+          minutes = parseInt(parts[1], 10) || 0;
+          const secParts = parts[2].split(',');
+          seconds = parseInt(secParts[0], 10) || 0;
+          ms = parseInt(secParts[1] || '0', 10) || 0;
+          if (secParts[1] && secParts[1].length === 2) ms *= 10;
+          if (secParts[1] && secParts[1].length === 1) ms *= 100;
+        } else if (parts.length === 2) {
+          minutes = parseInt(parts[0], 10) || 0;
+          const secParts = parts[1].split(',');
+          seconds = parseInt(secParts[0], 10) || 0;
+          ms = parseInt(secParts[1] || '0', 10) || 0;
+          if (secParts[1] && secParts[1].length === 2) ms *= 10;
+          if (secParts[1] && secParts[1].length === 1) ms *= 100;
+        }
+
+        return (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + ms;
+      }
+
+      static msToTime(ms, delimiter = ',') {
+        if (isNaN(ms) || ms < 0) ms = 0;
+        const totalSeconds = Math.floor(ms / 1000);
+        const milliseconds = Math.floor(ms % 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const pad = (num, digits = 2) => String(num).padStart(digits, '0');
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}${delimiter}${pad(milliseconds, 3)}`;
+      }
+
+      static parse(srtContent) {
+        if (!srtContent || typeof srtContent !== 'string') return [];
+        const content = srtContent.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+        const rawBlocks = content.split(/\n\s*\n+/);
+        const cues = [];
+        let fallbackIndex = 1;
+        const timeRegex = /((?:\d{1,2}:)?\d{2}:\d{2}[,.]\d{2,3})\s*-->\s*((?:\d{1,2}:)?\d{2}:\d{2}[,.]\d{2,3})/;
+
+        for (const block of rawBlocks) {
+          const lines = block.trim().split('\n').map(l => l.trim()).filter(Boolean);
+          if (lines.length === 0) continue;
+
+          if (lines[0].toUpperCase().startsWith('WEBVTT')) {
+            lines.shift();
+            if (lines.length === 0) continue;
+          }
+
+          let timeLineIdx = -1;
+          let match = null;
+
+          for (let i = 0; i < lines.length; i++) {
+            const m = lines[i].match(timeRegex);
+            if (m) {
+              timeLineIdx = i;
+              match = m;
+              break;
+            }
+          }
+
+          if (timeLineIdx === -1 || !match) continue;
+
+          let id = fallbackIndex;
+          if (timeLineIdx > 0) {
+            const parsedId = parseInt(lines[0], 10);
+            if (!isNaN(parsedId)) id = parsedId;
+          }
+
+          const startStr = match[1].replace('.', ',');
+          const endStr = match[2].replace('.', ',');
+          const startMs = this.timeToMs(startStr);
+          const endMs = this.timeToMs(endStr);
+          const textLines = lines.slice(timeLineIdx + 1);
+          const rawText = textLines.join('\n').trim();
+
+          if (rawText.length > 0) {
+            cues.push({
+              id: cues.length + 1,
+              originalId: id,
+              start: this.msToTime(startMs),
+              end: this.msToTime(endMs),
+              startMs,
+              endMs,
+              text: rawText,
+              translation: ''
+            });
+            fallbackIndex++;
+          }
+        }
+
+        return cues;
+      }
+
+      static stringify(cues, mode = 'target') {
+        if (!cues || cues.length === 0) return '';
+        return cues.map((cue, idx) => {
+          let content = '';
+          const translated = (cue.translation || '').trim();
+          const original = (cue.text || '').trim();
+
+          switch (mode) {
+            case 'bilingual_kh_src':
+              content = translated ? `${translated}\n${original}` : original;
+              break;
+            case 'bilingual_src_kh':
+              content = translated ? `${original}\n${translated}` : original;
+              break;
+            case 'source':
+              content = original;
+              break;
+            case 'target':
+            default:
+              content = translated || original;
+              break;
+          }
+
+          return `${idx + 1}\n${cue.start} --> ${cue.end}\n${content}`;
+        }).join('\n\n') + '\n';
+      }
+
+      static toPlainText(cues, translatedOnly = true) {
+        if (!cues || cues.length === 0) return '';
+        return cues.map(c => translatedOnly ? (c.translation || c.text) : c.text).join('\n');
+      }
+
+      static shiftTime(cues, deltaMs) {
+        if (!cues || !deltaMs) return cues;
+        return cues.map(cue => {
+          const newStartMs = Math.max(0, cue.startMs + deltaMs);
+          const newEndMs = Math.max(newStartMs + 100, cue.endMs + deltaMs);
+          return {
+            ...cue,
+            startMs: newStartMs,
+            endMs: newEndMs,
+            start: this.msToTime(newStartMs),
+            end: this.msToTime(newEndMs)
+          };
+        });
+      }
+    }
+
+    /* ------------------- 2. Translation Engine Module ------------------- */
+    class SubtitleTranslator {
+      constructor() {
+        this.isAborted = false;
+        this.abortController = null;
+        
+        this.glossary = [
+          { from: '豪门', to: 'ត្រកូលអភិជន' },
+          { from: '后妈', to: 'ម្ដាយចុង' },
+          { from: '总裁', to: 'លោកប្រធាន' },
+          { from: '小少爷', to: 'អ្នកប្រុសតូច' },
+          { from: '奥特曼', to: 'អ៊ុលត្រាមែន' },
+          { from: '迪佳', to: 'ឌីហ្កា' },
+          { from: '迪迦', to: 'ឌីហ្កា' },
+          { from: '家主', to: 'មេគ្រួសារត្រកូលធំ' },
+          { from: '乡下女孩', to: 'នារីស្រុកស្រែ' },
+          { from: '高薪招聘', to: 'ប្រកាសរើសបុគ្គលិកប្រាក់ខែខ្ពស់' },
+          { from: '面试者', to: 'បេក្ខជនសម្ភាសន៍' },
+          { from: '仪器在杂货间的画像', to: 'រូបគំនូរដែលគេបោះបង់ចោលក្នុងបន្ទប់ដាក់អីវ៉ាន់ចាស់' },
+          { from: '抱着逝世的态度', to: 'សាកល្បងទៅសម្ភាសន៍មើល' },
+          { from: '团列的小少爷', to: 'អ្នកប្រុសតូចកំហូច' },
+          { from: '来了警', to: 'ចាប់ផ្ដើមចាប់អារម្មណ៍និងសប្បាយចិត្ត' },
+          { from: '来劲', to: 'ចាប់ផ្ដើមរំភើបចិត្ត' }
+        ];
+      }
+
+      abort() {
+        this.isAborted = true;
+        if (this.abortController) {
+          this.abortController.abort();
+        }
+      }
+
+      numberToKhmerWords(numStr) {
+        if (numStr === null || numStr === undefined || numStr === '') return '';
+        const khmerDigits = { '០':'0', '១':'1', '២':'2', '៣':'3', '៤':'4', '៥':'5', '៦':'6', '៧':'7', '៨':'8', '៩':'9' };
+        const cleanStr = String(numStr).replace(/[០-៩]/g, d => khmerDigits[d] || d).trim();
+        
+        const num = parseInt(cleanStr, 10);
+        if (isNaN(num)) return numStr;
+        if (num === 0) return 'សូន្យ';
+
+        const ones = ['', 'មួយ', 'ពីរ', 'បី', 'បួន', 'ប្រាំ', 'ប្រាំមួយ', 'ប្រាំពីរ', 'ប្រាំបី', 'ប្រាំបួន'];
+        const tens = ['', 'ដប់', 'ម្ភៃ', 'សាមសិប', 'សែសិប', 'ហាសិប', 'ហុកសិប', 'ចិតសិប', 'ប៉ែតសិប', 'កៅសិប'];
+
+        function convertUnder1000(n) {
+          let str = '';
+          const hundred = Math.floor(n / 100);
+          const rem = n % 100;
+
+          if (hundred > 0) {
+            str += ones[hundred] + 'រយ';
+          }
+
+          if (rem > 0) {
+            if (rem < 10) {
+              str += ones[rem];
+            } else {
+              const ten = Math.floor(rem / 10);
+              const one = rem % 10;
+              str += tens[ten] + (one > 0 ? (one === 1 && ten > 1 ? 'មួយ' : ones[one]) : '');
+            }
+          }
+          return str;
+        }
+
+        if (num < 0) return 'ដក' + this.numberToKhmerWords(Math.abs(num));
+        if (num < 1000) return convertUnder1000(num);
+
+        let parts = [];
+        let n = num;
+
+        const billions = Math.floor(n / 1000000000);
+        n %= 1000000000;
+        const millions = Math.floor(n / 1000000);
+        n %= 1000000;
+        const hundredThousands = Math.floor(n / 100000);
+        n %= 100000;
+        const tenThousands = Math.floor(n / 10000);
+        n %= 10000;
+        const thousands = Math.floor(n / 1000);
+        n %= 1000;
+
+        if (billions > 0) parts.push(convertUnder1000(billions) + 'ពាន់លាន');
+        if (millions > 0) parts.push(convertUnder1000(millions) + 'លាន');
+        if (hundredThousands > 0) parts.push(ones[hundredThousands] + 'សែន');
+        if (tenThousands > 0) parts.push(ones[tenThousands] + 'ម៉ឺន');
+        if (thousands > 0) parts.push(convertUnder1000(thousands) + 'ពាន់');
+        if (n > 0) parts.push(convertUnder1000(n));
+
+        return parts.join('');
+      }
+
+      convertToPureKhmer(text) {
+        if (!text || typeof text !== 'string') return text;
+        let res = text;
+
+        res = res
+          .replace(/(\d+)\s*%/g, '$1ភាគរយ')
+          .replace(/%/g, 'ភាគរយ')
+          .replace(/\$\s*(\d+)/g, '$1ដុល្លារ')
+          .replace(/(\d+)\s*\$/g, '$1ដុល្លារ')
+          .replace(/\$/g, 'ដុល្លារ')
+          .replace(/¥|￥/g, 'យ័ន')
+          .replace(/€/g, 'អឺរ៉ូ')
+          .replace(/&/g, 'និង')
+          .replace(/°C|℃/gi, 'អង្សាសេ')
+          .replace(/\bkm\/h\b/gi, 'គីឡូម៉ែត្រក្នុងមួយម៉ោង')
+          .replace(/\bkm\b/gi, 'គីឡូម៉ែត្រ')
+          .replace(/\bkg\b/gi, 'គីឡូក្រាម')
+          .replace(/\bcm\b/gi, 'សង់ទីម៉ែត្រ')
+          .replace(/\bmm\b/gi, 'មីលីម៉ែត្រ')
+          .replace(/\bm\b/gi, 'ម៉ែត្រ')
+          .replace(/\+/g, 'បូក');
+
+        res = res
+          .replace(/劝/g, 'លួងលោម')
+          .replace(/团列/g, 'កំហូច')
+          .replace(/ទ[\u0E34\u17B7]ប/g, 'ទើប')
+          .replace(/[\u0590-\u05FF]/g, '')
+          .replace(/[\u0E00-\u0E7F]/g, '')
+          .replace(/[\u4E00-\u9FFF\u3400-\u4DBF]/g, '')
+          .replace(/ទទាក់ទាញ/g, 'ទាក់ទាញ')
+          .replace(/ដ៏\s+មួយរូប/g, 'កំហូចមួយរូប');
+
+        res = res.replace(/([0-9០-៩]+)/g, (match) => {
+          return this.numberToKhmerWords(match);
+        });
+
+        res = res.replace(/\([a-zA-Z\s]+\)/g, '').replace(/\[[a-zA-Z\s]+\]/g, '');
+        res = res.replace(/[a-zA-Z\u0400-\u04FF\u0370-\u03FF\u0600-\u06FF]/g, '');
+        res = res.replace(/[ \t]+/g, ' ');
+
+        return res.trim();
+      }
+
+      applyGlossary(text) {
+        if (!text) return text;
+        let result = text;
+        if (this.glossary && this.glossary.length > 0) {
+          for (const item of this.glossary) {
+            if (item.from && item.to) {
+              const regex = new RegExp(item.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+              result = result.replace(regex, item.to);
+            }
+          }
+        }
+        return this.convertToPureKhmer(result);
+      }
+
+      async translateWithAIEngine(cues, options = {}, onProgress) {
+        this.isAborted = false;
+        this.abortController = new AbortController();
+        const signal = this.abortController.signal;
+
+        const {
+          provider = 'gemini',
+          apiKey,
+          model = 'gemini-3.6-flash',
+          tone = 'drama'
+        } = options;
+
+        const rawKeys = (apiKey || '')
+          .split(/[\n,;]+/)
+          .map(k => k.trim().replace(/^Bearer\s+/i, '').replace(/["' ]/g, ''))
+          .filter(k => k.length > 5);
+
+        if (rawKeys.length === 0) {
+          throw new Error('មូលហេតុបរាជ័យ៖ មិនទាន់មាន API Key! សូមបញ្ចូល Google Gemini API Key ជាមុនសិន។');
+        }
+
+        let keyIndex = 0;
+        const getActiveKey = () => rawKeys[keyIndex % rawKeys.length];
+        const rotateKey = () => {
+          if (rawKeys.length > 1) {
+            keyIndex = (keyIndex + 1) % rawKeys.length;
+            return true;
+          }
+          return false;
+        };
+
+        const total = cues.length;
+        let completed = 0;
+        const CHUNK_SIZE = 40;
+
+        const toneInstructions = {
+          drama: `រចនាបថភាពយន្តភាគខ្មែរ (Cambodian Drama/Cinema Dubbing style):
+- ប្រើពាក្យរលូន ពិរោះ មានចង្វាក់ ស្តាប់ទៅមានមនោសញ្ចេតនា និងទាក់ទាញ ដូចអ្នកបញ្ចូលសំឡេងរឿងភាគទូរទស្សន៍
+- មិនត្រូវបកប្រែពាក្យមួយៗចំៗតាមម៉ាស៊ីនដាច់ខាត (Never literal machine translation)។ ត្រូវបកប្រែសម្រួលន័យទាំងមូលឱ្យពិរោះ ងាយយល់ និងត្រូវបរិបទតួអង្គ
+- ប្រើសព្វនាមសមស្រប៖ លោកប្រធាន, អ្នកប្រុសតូច, ត្រកូលអភិជន, ម្ដាយចុង, នាង, គាត់, ឯង, បង, អូន
+- កែសម្រួលពាក្យចិនកាត់សំឡេងខុស (Speech-to-Text typos) ឱ្យត្រូវន័យសាច់រឿង`,
+          natural: 'ភាសានិយាយប្រចាំថ្ងៃបែបធម្មជាតិ រលូន ងាយយល់ ខ្លីល្មមសម្រាប់ Subtitle និងពិរោះស្តាប់',
+          action: 'ខ្លី មុតស្រួច មានថាមពល រស់រវើក សមរម្យសម្រាប់ខ្សែភាពយន្តវាយប្រហារ/សកម្មភាព',
+          formal: 'ភាសាផ្លូវការ គួរសម ត្រឹមត្រូវតាមក្បួនវេយ្យាករណ៍ និងច្បាស់លាស់'
+        };
+
+        const systemPrompt = `You are a legendary Cambodian film voice dubbing director, cinema scriptwriter, and master subtitle translator.
+Your goal is to translate Asian/Chinese drama subtitles into breathtaking, natural, emotionally resonant, and melodious Khmer (ភាសាខ្មែរពិរោះ រលូន ច្បាស់លាស់ និងងាយយល់បំផុត).
+
+CRITICAL STANDARDS FOR EXCELLENT KHMER DUBBING:
+1. Tone & Melodious Flow:
+   ${toneInstructions[tone] || toneInstructions.drama}
+2. 100% PURE KHMER SCRIPT (អក្សរខ្មែរសុទ្ធ ១០០%):
+   - Absolutely NO English/Latin letters. (e.g. Ultraman -> អ៊ុលត្រាមែន, Tiga -> ឌីហ្កា, VIP -> វីអាយភី, OK -> អូខេ).
+   - NEVER leave any untranslated Chinese characters (e.g. 劝 -> លួងលោម, 谁劝 -> នរណាលួងលោម, 团列 -> កំហូច).
+3. SPELL OUT ALL NUMBERS & SYMBOLS AS KHMER SPOKEN WORDS:
+   - Numbers: 3 -> បី, 10 -> ដប់, 100 -> មួយរយ, 2024 -> ពីរពាន់ម្ភៃបួន, 35 -> សាមសិបប្រាំ, 3分钟 -> បីនាទី.
+   - Symbols: % -> ភាគរយ, $ -> ដុល្លារ, + -> បូក, & -> និង.
+4. Natural Dialogue Flow (Avoid Literal Translation):
+   - Machine style (BAD): "នៅផ្ទះយក្សធ្វើម្ដាយចុងក្មេងស្រី"
+   - Cinematic Dubbing (GOOD): "នារីម្នាក់ដែលទៅធ្វើជាម្ដាយចុងក្នុងត្រកូលអភិជន"
+5. Subtitle Timing: Keep lines punchy, balanced, and easy to read aloud in 1-2 seconds.
+6. Translate EVERY single item in the array without skipping.
+7. Input format: [{"id": 1, "text": "..."}]
+8. Output format: Return ONLY a valid JSON array: [{"id": 1, "translated": "..."}]`;
+
+        let activeModel = (model || 'gemini-3.6-flash').replace(/^models\//, '').trim();
+
+        const processBatch = async (chunkItems, batchDesc = '') => {
+          if (this.isAborted) throw new Error('អ្នកប្រើប្រាស់បានផ្អាកការបកប្រែ');
+
+          const payloadItems = chunkItems.map(c => ({ id: c.id, text: c.text }));
+          const userMessage = JSON.stringify(payloadItems);
+          let translatedMap = {};
+
+          const callGemini = async (modelName, currentKey) => {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${currentKey}`;
+            const body = {
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: `${systemPrompt}\n\nTranslate each subtitle item to Khmer JSON array:\n${userMessage}` }]
+                }
+              ],
+              generationConfig: { temperature: 0.2 }
+            };
+
+            return await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+              signal
+            });
+          };
+
+          let res = null;
+          let lastError = null;
+          const maxAttempts = Math.max(3, rawKeys.length * 2);
+
+          for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            if (this.isAborted) throw new Error('អ្នកប្រើប្រាស់បានផ្អាកការបកប្រែ');
+
+            const currentKey = getActiveKey();
+            try {
+              res = await callGemini(activeModel, currentKey);
+
+              if (!res.ok && (res.status === 404 || res.status === 400) && activeModel !== 'gemini-3.6-flash' && activeModel !== 'gemini-3.5-flash-lite') {
+                activeModel = 'gemini-3.6-flash';
+                res = await callGemini('gemini-3.6-flash', currentKey);
+              }
+
+              if (res.status === 503 || res.status === 429) {
+                const rotated = rotateKey();
+                if (rotated) {
+                  if (onProgress) {
+                    onProgress({
+                      completed,
+                      total,
+                      percent: Math.round((completed / total) * 100),
+                      statusNote: `🔄 ជាប់ Quota លើ Key #${keyIndex} -> បានប្តូរទៅកាន់ Key #${(keyIndex % rawKeys.length) + 1}...`
+                    });
+                  }
+                  await new Promise(r => setTimeout(r, 600));
+                  continue;
+                }
+
+                const waitSec = Math.min(attempt * 4, 15);
+                if (onProgress) {
+                  onProgress({
+                    completed,
+                    total,
+                    percent: Math.round((completed / total) * 100),
+                    statusNote: `⚠️ Gemini Rate Limit (${res.status}) - កំពុងរង់ចាំ ${waitSec}s... (${attempt}/${maxAttempts})`
+                  });
+                }
+                if (attempt < maxAttempts) {
+                  await new Promise(r => setTimeout(r, waitSec * 1000));
+                  continue;
+                }
+              }
+
+              if (res.ok) break;
+            } catch (err) {
+              if (err.name === 'AbortError') throw new Error('អ្នកប្រើប្រាស់បានផ្អាកការបកប្រែ');
+              lastError = err;
+              rotateKey();
+              if (attempt < maxAttempts) {
+                await new Promise(r => setTimeout(r, 2000));
+              }
+            }
+          }
+
+          if (!res || !res.ok) {
+            const errData = res ? await res.json().catch(() => ({})) : {};
+            const errMsg = errData.error?.message || (lastError ? lastError.message : `HTTP ${res?.status || 500}`);
+            const rangeStr = batchDesc || `ជួរ #${chunkItems[0].id} ដល់ #${chunkItems[chunkItems.length - 1].id}`;
+
+            if (errMsg.includes('denied access') || res?.status === 403) {
+              throw new Error(`[${rangeStr}] បរាជ័យ៖ គម្រោង Google Cloud ត្រូវបានបដិសេធ (Project Access Denied)។`);
+            } else if (errMsg.includes('API key not valid') || errMsg.includes('API_KEY_INVALID')) {
+              throw new Error(`[${rangeStr}] បរាជ័យ៖ Gemini API Key មិនត្រឹមត្រូវ (Invalid API Key)។`);
+            } else if (errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota') || res?.status === 429) {
+              throw new Error(`[${rangeStr}] បរាជ័យ៖ លើសកម្រិតកំណត់ (Rate Limit / Daily Quota Exceeded)។`);
+            } else {
+              throw new Error(`[${rangeStr}] បរាជ័យ៖ ${errMsg}`);
+            }
+          }
+
+          const data = await res.json();
+          const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!rawContent) {
+            throw new Error(`[ជួរ #${chunkItems[0].id} ដល់ #${chunkItems[chunkItems.length - 1].id}] បរាជ័យ៖ Google Gemini មិនបានផ្ដល់ចម្លើយត្រឡប់មកវិញទេ។`);
+          }
+
+          try {
+            const jsonMatch = rawContent.match(/\[\s*\{[\s\S]*\}\s*\]/) || rawContent.match(/\{[\s\S]*\}/) || rawContent.match(/\[[\s\S]*\]/);
+            const cleanJson = jsonMatch ? jsonMatch[0] : rawContent.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(cleanJson);
+
+            if (Array.isArray(parsed)) {
+              parsed.forEach((item, idx) => {
+                if (typeof item === 'object' && item !== null) {
+                  const cueId = item.id !== undefined ? parseInt(item.id, 10) : chunkItems[idx]?.id;
+                  const text = item.translated || item.translation || item.khmer || item.text || item.result || Object.values(item)[1] || Object.values(item)[0];
+                  if (cueId && text && typeof text === 'string') {
+                    translatedMap[cueId] = text;
+                  }
+                } else if (typeof item === 'string' && chunkItems[idx]) {
+                  translatedMap[chunkItems[idx].id] = item;
+                }
+              });
+            } else if (typeof parsed === 'object' && parsed !== null) {
+              const list = parsed.translations || parsed.items || parsed.subtitles || parsed.cues;
+              if (Array.isArray(list)) {
+                list.forEach((item, idx) => {
+                  const cueId = item.id !== undefined ? parseInt(item.id, 10) : chunkItems[idx]?.id;
+                  const text = item.translated || item.translation || item.khmer || item.text || (typeof item === 'string' ? item : '');
+                  if (cueId && text) translatedMap[cueId] = text;
+                });
+              } else {
+                Object.entries(parsed).forEach(([key, val]) => {
+                  const cueId = parseInt(key, 10);
+                  if (!isNaN(cueId) && typeof val === 'string') translatedMap[cueId] = val;
+                });
+              }
+            }
+          } catch (pe) {
+            const lines = rawContent.split('\n').map(l => l.trim()).filter(Boolean);
+            lines.forEach(line => {
+              const m = line.match(/^(\d+)[\.\:\-\s]+(.+)$/);
+              if (m) {
+                const id = parseInt(m[1], 10);
+                const text = m[2].trim().replace(/^["']|["']$/g, '');
+                if (id && text) translatedMap[id] = text;
+              }
+            });
+            if (Object.keys(translatedMap).length === 0 && lines.length === chunkItems.length) {
+              chunkItems.forEach((cue, idx) => {
+                translatedMap[cue.id] = lines[idx].replace(/^["']|["']$/g, '');
+              });
+            }
+          }
+
+          for (const cue of chunkItems) {
+            if (translatedMap[cue.id]) {
+              let trans = translatedMap[cue.id];
+              if (options.useGlossary) {
+                trans = this.applyGlossary(trans);
+              } else {
+                trans = this.convertToPureKhmer(trans);
+              }
+              cue.translation = trans;
+            }
+          }
+
+          return translatedMap;
+        };
+
+        for (let i = 0; i < total; i += CHUNK_SIZE) {
+          if (this.isAborted) throw new Error('អ្នកប្រើប្រាស់បានផ្អាកការបកប្រែ');
+
+          const chunk = cues.slice(i, i + CHUNK_SIZE);
+          const batchDesc = `កញ្ចប់ ${Math.floor(i / CHUNK_SIZE) + 1}/${Math.ceil(total / CHUNK_SIZE)} (ជួរ #${chunk[0].id} ដល់ #${chunk[chunk.length - 1].id})`;
+
+          await processBatch(chunk, batchDesc);
+          completed = cues.filter(c => !!c.translation).length;
+
+          if (onProgress) {
+            const lastTranslated = chunk.find(c => !!c.translation);
+            onProgress({
+              completed,
+              total,
+              percent: Math.round((completed / total) * 100),
+              currentText: lastTranslated ? lastTranslated.translation : ''
+            });
+          }
+
+          if (i + CHUNK_SIZE < total) {
+            await new Promise(r => setTimeout(r, 2200));
+          }
+        }
+
+        const missingCues = cues.filter(c => !c.translation || c.translation.trim() === '');
+        if (missingCues.length > 0) {
+          const SWEEP_CHUNK_SIZE = 15;
+          for (let k = 0; k < missingCues.length; k += SWEEP_CHUNK_SIZE) {
+            if (this.isAborted) throw new Error('អ្នកប្រើប្រាស់បានផ្អាកការបកប្រែ');
+            const sweepChunk = missingCues.slice(k, k + SWEEP_CHUNK_SIZE);
+            await processBatch(sweepChunk, `ជួរបំពេញ #${sweepChunk[0].id} ដល់ #${sweepChunk[sweepChunk.length - 1].id}`);
+            completed = cues.filter(c => !!c.translation).length;
+            if (onProgress) {
+              onProgress({
+                completed,
+                total,
+                percent: Math.round((completed / total) * 100),
+                currentText: sweepChunk[sweepChunk.length - 1]?.translation || ''
+              });
+            }
+            await new Promise(r => setTimeout(r, 1500));
+          }
+        }
+
+        return cues;
+      }
+    }
+
+    /* ------------------- 3. Main Application Logic ------------------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = {
+        cues: [],
+        fileName: 'subtitles',
+        isTranslating: false,
+        theme: localStorage.getItem('srt_theme') || 'dark',
+        activeTab: 'upload',
+        videoFile: null,
+        isPlaying: false,
+        currentTimeMs: 0,
+        previewTimer: null,
+        aiConfig: {
+          provider: 'gemini',
+          apiKey: localStorage.getItem('srt_ai_key') || '',
+          model: localStorage.getItem('srt_ai_model') || 'gemini-3.6-flash',
+          tone: 'drama'
+        }
+      };
+
+      const translator = new SubtitleTranslator();
+
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const srtFileInput = document.getElementById('srtFileInput');
+      const dropzone = document.getElementById('dropzone');
+      const srtPasteArea = document.getElementById('srtPasteArea');
+      const loadSampleBtn = document.getElementById('loadSampleBtn');
+      const clearInputBtn = document.getElementById('clearInputBtn');
+      const parsePasteBtn = document.getElementById('parsePasteBtn');
+      
+      const tabUploadBtn = document.getElementById('tabUploadBtn');
+      const tabPasteBtn = document.getElementById('tabPasteBtn');
+      const uploadTabContent = document.getElementById('uploadTabContent');
+      const pasteTabContent = document.getElementById('pasteTabContent');
+
+      const aiApiKeyInput = document.getElementById('aiApiKeyInput');
+      const aiModelSelect = document.getElementById('aiModelSelect');
+      const aiToneSelect = document.getElementById('aiToneSelect');
+      const saveAiKeyBtn = document.getElementById('saveAiKeyBtn');
+      const testAiKeyBtn = document.getElementById('testAiKeyBtn');
+
+      const translateBtn = document.getElementById('translateBtn');
+      const cancelTranslateBtn = document.getElementById('cancelTranslateBtn');
+      const progressCard = document.getElementById('progressCard');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const progressPercentText = document.getElementById('progressPercentText');
+      const progressStatusDetail = document.getElementById('progressStatusDetail');
+
+      const workspaceCard = document.getElementById('workspaceCard');
+      const cueList = document.getElementById('cueList');
+      const totalCuesCount = document.getElementById('totalCuesCount');
+      const translatedCount = document.getElementById('translatedCount');
+
+      const searchInput = document.getElementById('searchInput');
+      const replaceInput = document.getElementById('replaceInput');
+      const replaceBtn = document.getElementById('replaceBtn');
+      const shiftTimeInput = document.getElementById('shiftTimeInput');
+      const shiftTimeBtn = document.getElementById('shiftTimeBtn');
+
+      const exportModalBtn = document.getElementById('exportModalBtn');
+      const previewModalBtn = document.getElementById('previewModalBtn');
+      const exportModal = document.getElementById('exportModal');
+      const previewModal = document.getElementById('previewModal');
+      const closeExportModalBtn = document.getElementById('closeExportModalBtn');
+      const closePreviewModalBtn = document.getElementById('closePreviewModalBtn');
+
+      const downloadKhmerSrtBtn = document.getElementById('downloadKhmerSrtBtn');
+      const downloadBilingualSrtBtn = document.getElementById('downloadBilingualSrtBtn');
+      const downloadTxtBtn = document.getElementById('downloadTxtBtn');
+      const copyClipboardBtn = document.getElementById('copyClipboardBtn');
+
+      const previewVideo = document.getElementById('previewVideo');
+      const videoFileInput = document.getElementById('videoFileInput');
+      const simulatedPlayer = document.getElementById('simulatedPlayer');
+      const subtitleOverlay = document.getElementById('subtitleOverlay');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const playerTimeDisplay = document.getElementById('playerTimeDisplay');
+      const playerProgress = document.getElementById('playerProgress');
+      const toastContainer = document.getElementById('toastContainer');
+
+      const SAMPLE_SRT_TEXT = `1
+00:00:00,333 --> 00:00:01,700
+在豪门家做后妈的女孩
+
+2
+00:00:01,700 --> 00:00:02,600
+却震惊的发现
+
+3
+00:00:02,600 --> 00:00:03,866
+仪器在杂货间的画像
+
+4
+00:00:03,866 --> 00:00:05,166
+居然跟自己长得一模一样
+
+5
+00:00:05,166 --> 00:00:06,766
+就在他百思不得其解时
+
+6
+00:00:06,766 --> 00:00:08,400
+家主焦急忙慌的闯了进来
+
+7
+00:00:08,400 --> 00:00:09,933
+他这才得知其中的真相
+
+8
+00:00:09,933 --> 00:00:11,133
+原来就在几天前
+
+9
+00:00:11,133 --> 00:00:12,700
+晋城找工作的乡下女孩
+
+10
+00:00:12,700 --> 00:00:13,900
+却无意间发现了一张
+
+11
+00:00:13,900 --> 00:00:15,300
+高薪招聘后妈的广告
+
+12
+00:00:15,300 --> 00:00:15,566
+于是
+
+13
+00:00:15,566 --> 00:00:17,533
+他抱着逝世的态度就去参加了面试
+
+14
+00:00:17,533 --> 00:00:19,333
+结果刚一进门就被给吓到了
+
+15
+00:00:19,333 --> 00:00:20,900
+团列的小少爷谁劝都不吃饭
+
+16
+00:00:20,900 --> 00:00:21,900
+发愁的老爹已经
+
+17
+00:00:21,900 --> 00:00:23,166
+赶走了无数个面试者
+
+18
+00:00:23,166 --> 00:00:25,066
+总裁见女孩这一身时髦的打扮
+
+19
+00:00:25,066 --> 00:00:26,466
+把他当成了不正经女孩
+
+20
+00:00:26,466 --> 00:00:27,700
+可女孩却不乐意了
+
+21
+00:00:27,700 --> 00:00:29,100
+扬言给他3分钟时间
+
+22
+00:00:29,100 --> 00:00:30,500
+保证能让小少爷吃饭
+
+23
+00:00:30,500 --> 00:00:32,066
+总裁被女孩的气势征服
+
+24
+00:00:32,066 --> 00:00:33,166
+决定给他一次机会
+
+25
+00:00:33,166 --> 00:00:34,700
+可就在众人都以为女孩会失败时
+
+26
+00:00:34,700 --> 00:00:36,433
+女孩却把老爹打扮成了怪兽的模样
+
+27
+00:00:36,433 --> 00:00:38,400
+还让他假装要毁掉这个城堡
+
+28
+00:00:38,400 --> 00:00:40,200
+他则扮演起了奥特曼的角色
+
+29
+00:00:40,200 --> 00:00:40,566
+果然
+
+30
+00:00:40,566 --> 00:00:42,366
+刚刚还哭闹的小少爷看到这一幕
+
+31
+00:00:42,366 --> 00:00:42,766
+来了警
+
+32
+00:00:42,766 --> 00:00:43,800
+怪兽被打跑后
+
+33
+00:00:43,800 --> 00:00:45,400
+女孩也假装似的倒下
+
+34
+00:00:45,466 --> 00:00:47,366
+迪佳你不要死
+
+35
+00:00:47,500 --> 00:00:49,500
+只有你把饭都吃掉`;
+
+      function showToast(message, type = 'info') {
+        if (!toastContainer) return;
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+        toast.innerHTML = `<span style="font-weight:bold">${icon}</span> <span>${message}</span>`;
+        toastContainer.appendChild(toast);
+        
+        const duration = type === 'error' ? 7000 : 4000;
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(40px)';
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      }
+
+      function updateThemeIcon() {
+        if (themeToggleBtn) {
+          themeToggleBtn.innerHTML = state.theme === 'dark' ? '<span>☀️</span> <span>ពន្លឺ</span>' : '<span>🌙</span> <span>ងងឹត</span>';
+        }
+      }
+
+      document.documentElement.setAttribute('data-theme', state.theme);
+      updateThemeIcon();
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          state.theme = state.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', state.theme);
+          localStorage.setItem('srt_theme', state.theme);
+          updateThemeIcon();
+        });
+      }
+
+      if (tabUploadBtn && tabPasteBtn) {
+        tabUploadBtn.addEventListener('click', () => {
+          tabUploadBtn.classList.add('active');
+          tabPasteBtn.classList.remove('active');
+          uploadTabContent.style.display = 'block';
+          pasteTabContent.style.display = 'none';
+          state.activeTab = 'upload';
+        });
+
+        tabPasteBtn.addEventListener('click', () => {
+          tabPasteBtn.classList.add('active');
+          tabUploadBtn.classList.remove('active');
+          pasteTabContent.style.display = 'block';
+          uploadTabContent.style.display = 'none';
+          state.activeTab = 'paste';
+        });
+      }
+
+      if (state.aiConfig.apiKey && aiApiKeyInput) {
+        aiApiKeyInput.value = state.aiConfig.apiKey;
+      }
+      if (state.aiConfig.model && aiModelSelect) {
+        aiModelSelect.value = state.aiConfig.model;
+      }
+
+      if (aiModelSelect) {
+        aiModelSelect.addEventListener('change', () => {
+          state.aiConfig.model = aiModelSelect.value;
+          localStorage.setItem('srt_ai_model', state.aiConfig.model);
+        });
+      }
+
+      if (saveAiKeyBtn && aiApiKeyInput) {
+        saveAiKeyBtn.addEventListener('click', () => {
+          const key = (aiApiKeyInput.value || '').trim();
+          if (!key) {
+            showToast('សូមបញ្ចូល API Key!', 'error');
+            return;
+          }
+          state.aiConfig.apiKey = key;
+          localStorage.setItem('srt_ai_key', key);
+          showToast('បានរក្សាទុក Gemini API Key ដោយជោគជ័យ!', 'success');
+        });
+      }
+
+      if (testAiKeyBtn && aiApiKeyInput) {
+        testAiKeyBtn.addEventListener('click', async () => {
+          const rawInput = (aiApiKeyInput.value || '').trim();
+          const keys = rawInput
+            .split(/[\n,;]+/)
+            .map(k => k.trim().replace(/^Bearer\s+/i, '').replace(/["' ]/g, ''))
+            .filter(k => k.length > 5);
+
+          if (keys.length === 0) {
+            aiApiKeyInput.focus();
+            showToast('សូមបញ្ចូល API Key ជាមុនសិន!', 'error');
+            return;
+          }
+
+          testAiKeyBtn.textContent = '⏳';
+          testAiKeyBtn.disabled = true;
+
+          try {
+            const modelName = aiModelSelect ? aiModelSelect.value : 'gemini-3.6-flash';
+            let successCount = 0;
+            let lastErrorMsg = '';
+
+            for (let i = 0; i < keys.length; i++) {
+              const key = keys[i];
+              const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [{ parts: [{ text: 'Say OK' }] }]
+                })
+              });
+
+              if (res.ok) {
+                successCount++;
+              } else {
+                const errData = await res.json().catch(() => ({}));
+                lastErrorMsg = errData.error?.message || `HTTP ${res.status}`;
+              }
+            }
+
+            if (successCount === keys.length) {
+              showToast(`✓ API Key ត្រឹមត្រូវ និងដំណើរការល្អ ១០០% (${successCount}/${keys.length} Keys)`, 'success');
+            } else if (successCount > 0) {
+              showToast(`⚠️ មាន ${successCount}/${keys.length} Keys ដំណើរការ (Key មួយចំនួនមានបញ្ហា៖ ${lastErrorMsg})`, 'info');
+            } else {
+              showToast(`✕ តេស្តបរាជ័យ៖ ${lastErrorMsg}`, 'error');
+            }
+          } catch (e) {
+            showToast(`✕ មិនអាចភ្ជាប់ទៅកាន់ Google AI បានទេ៖ ${e.message}`, 'error');
+          } finally {
+            testAiKeyBtn.innerHTML = '<span>🔍</span> តេស្ត';
+            testAiKeyBtn.disabled = false;
+          }
+        });
+      }
+
+      if (loadSampleBtn) {
+        loadSampleBtn.addEventListener('click', () => {
+          processSrtContent(SAMPLE_SRT_TEXT);
+          state.fileName = 'Chinese_Drama_Sample';
+          showToast('បានផ្ទុកអត្ថបទរឿងភាគគំរូ 35 ជួររួចរាល់!', 'success');
+        });
+      }
+
+      if (srtFileInput) {
+        srtFileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          state.fileName = file.name.replace(/\.[^/.]+$/, '');
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            processSrtContent(event.target.result);
+            showToast(`បានផ្ទុកឯកសារ "${file.name}" ដោយជោគជ័យ!`, 'success');
+          };
+          reader.readAsText(file, 'UTF-8');
+        });
+      }
+
+      if (dropzone) {
+        ['dragenter', 'dragover'].forEach(name => {
+          dropzone.addEventListener(name, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('drag-over');
+          });
+        });
+
+        ['dragleave', 'drop'].forEach(name => {
+          dropzone.addEventListener(name, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('drag-over');
+          });
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            const file = files[0];
+            state.fileName = file.name.replace(/\.[^/.]+$/, '');
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              processSrtContent(event.target.result);
+              showToast(`បានផ្ទុកឯកសារ "${file.name}" ដោយជោគជ័យ!`, 'success');
+            };
+            reader.readAsText(file, 'UTF-8');
+          }
+        });
+      }
+
+      if (clearInputBtn && srtPasteArea) {
+        clearInputBtn.addEventListener('click', () => {
+          srtPasteArea.value = '';
+          srtPasteArea.focus();
+        });
+      }
+
+      if (parsePasteBtn && srtPasteArea) {
+        parsePasteBtn.addEventListener('click', () => {
+          const text = srtPasteArea.value.trim();
+          if (!text) {
+            showToast('សូមបិទភ្ជាប់ (Paste) អត្ថបទ SRT ជាមុនសិន!', 'error');
+            return;
+          }
+          processSrtContent(text);
+          showToast('បានវិភាគទិន្នន័យ SRT រួចរាល់!', 'success');
+        });
+      }
+
+      function processSrtContent(content) {
+        const cues = SRTParser.parse(content);
+        if (cues.length === 0) {
+          showToast('រកមិនឃើញទិន្នន័យ SRT ត្រឹមត្រូវទេ! សូមពិនិត្យមើលទ្រង់ទ្រាយឡើងវិញ។', 'error');
+          return;
+        }
+
+        state.cues = cues;
+        if (workspaceCard) workspaceCard.style.display = 'block';
+        if (translateBtn) translateBtn.disabled = false;
+        renderCues();
+        updateStats();
+
+        workspaceCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function renderCues() {
+        if (!cueList) return;
+        cueList.innerHTML = '';
+
+        if (state.cues.length === 0) {
+          cueList.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">គ្មានទិន្នន័យ Subtitle ទេ</div>';
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        state.cues.forEach((cue) => {
+          const card = document.createElement('div');
+          card.className = 'cue-card';
+          card.dataset.id = cue.id;
+          card.id = `cue-item-${cue.id}`;
+
+          card.innerHTML = `
+            <div class="cue-index">#${cue.id}</div>
+            <div class="cue-timecode">
+              <span class="cue-time-badge">${cue.start}</span>
+              <span class="cue-time-badge" style="color:var(--text-muted)">↳ ${cue.end}</span>
+            </div>
+            <div class="cue-source">${escapeHtml(cue.text)}</div>
+            <div class="cue-translation">
+              <textarea class="cue-translation-input" data-id="${cue.id}" placeholder="ភាសាខ្មែរ...">${escapeHtml(cue.translation || '')}</textarea>
+            </div>
+            <div class="cue-actions">
+              <button class="icon-btn single-translate-btn" title="បកប្រែជួរនេះឡើងវិញ" data-id="${cue.id}">🔄</button>
+              <button class="icon-btn delete delete-cue-btn" title="លុបជួរនេះ" data-id="${cue.id}">🗑️</button>
+            </div>
+          `;
+
+          fragment.appendChild(card);
+        });
+
+        cueList.appendChild(fragment);
+
+        cueList.querySelectorAll('.cue-translation-input').forEach(input => {
+          input.addEventListener('input', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const cue = state.cues.find(c => c.id === id);
+            if (cue) {
+              cue.translation = e.target.value;
+              updateStats();
+            }
+          });
+        });
+
+        cueList.querySelectorAll('.single-translate-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = parseInt(btn.dataset.id, 10);
+            const cue = state.cues.find(c => c.id === id);
+            if (!cue) return;
+
+            const apiKey = state.aiConfig.apiKey || (aiApiKeyInput ? aiApiKeyInput.value.trim() : '');
+            if (!apiKey) {
+              if (aiApiKeyInput) aiApiKeyInput.focus();
+              showToast('សូមបញ្ចូល Google Gemini API Key ជាមុនសិន!', 'error');
+              return;
+            }
+
+            btn.textContent = '⏳';
+            try {
+              await translator.translateWithAIEngine([cue], {
+                provider: 'gemini',
+                apiKey,
+                model: aiModelSelect ? aiModelSelect.value : 'gemini-3.6-flash',
+                tone: aiToneSelect ? aiToneSelect.value : 'drama',
+                useGlossary: true
+              });
+
+              const input = cueList.querySelector(`.cue-translation-input[data-id="${id}"]`);
+              if (input) input.value = cue.translation;
+              updateStats();
+              showToast(`បានបកប្រែជួរ #${id} រួចរាល់`, 'success');
+            } catch (err) {
+              showToast(`បរាជ័យក្នុងការបកប្រែជួរ #${id}: ${err.message}`, 'error');
+            } finally {
+              btn.textContent = '🔄';
+            }
+          });
+        });
+
+        cueList.querySelectorAll('.delete-cue-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id, 10);
+            state.cues = state.cues.filter(c => c.id !== id);
+            state.cues.forEach((c, i) => c.id = i + 1);
+            renderCues();
+            updateStats();
+            showToast(`បានលុបជួរ #${id}`, 'info');
+          });
+        });
+      }
+
+      function updateStats() {
+        if (totalCuesCount) totalCuesCount.textContent = state.cues.length;
+        if (translatedCount) {
+          const transCount = state.cues.filter(c => (c.translation || '').trim().length > 0).length;
+          translatedCount.textContent = transCount;
+        }
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      if (translateBtn) {
+        translateBtn.addEventListener('click', async () => {
+          if (state.cues.length === 0) {
+            showToast('គ្មានទិន្នន័យសម្រាប់បកប្រែទេ!', 'error');
+            return;
+          }
+
+          const apiKey = state.aiConfig.apiKey || (aiApiKeyInput ? aiApiKeyInput.value.trim() : '');
+          if (!apiKey) {
+            if (aiApiKeyInput) aiApiKeyInput.focus();
+            showToast('សូមបញ្ចូល Google Gemini API Key ជាមុនសិន!', 'error');
+            return;
+          }
+
+          state.isTranslating = true;
+          translateBtn.style.display = 'none';
+          if (cancelTranslateBtn) cancelTranslateBtn.style.display = 'inline-flex';
+          if (progressCard) progressCard.style.display = 'flex';
+          if (progressBarFill) progressBarFill.style.width = '0%';
+          if (progressPercentText) progressPercentText.textContent = '0%';
+          if (progressStatusDetail) progressStatusDetail.textContent = 'កំពុងចាប់ផ្ដើមបកប្រែជាមួយ Gemini AI...';
+
+          const onProgress = (prog) => {
+            if (progressBarFill) progressBarFill.style.width = `${prog.percent}%`;
+            if (progressPercentText) progressPercentText.textContent = `${prog.percent}% (${prog.completed}/${prog.total})`;
+            if (progressStatusDetail) {
+              if (prog.statusNote) {
+                progressStatusDetail.textContent = prog.statusNote;
+              } else {
+                progressStatusDetail.textContent = `បានបកប្រែ: ${prog.currentText || ''}`;
+              }
+            }
+            
+            state.cues.forEach(c => {
+              if (c.translation) {
+                const input = cueList ? cueList.querySelector(`.cue-translation-input[data-id="${c.id}"]`) : null;
+                if (input && input.value !== c.translation) {
+                  input.value = c.translation;
+                }
+              }
+            });
+            updateStats();
+          };
+
+          try {
+            await translator.translateWithAIEngine(state.cues, {
+              provider: 'gemini',
+              apiKey,
+              model: aiModelSelect ? aiModelSelect.value : 'gemini-3.6-flash',
+              tone: aiToneSelect ? aiToneSelect.value : 'drama',
+              useGlossary: true
+            }, onProgress);
+
+            renderCues();
+            updateStats();
+            showToast('🎉 ការបកប្រែជាភាសាខ្មែរគ្រប់ជួរ (១០០%) ជាមួយ Gemini AI ត្រូវបានបញ្ចប់ដោយជោគជ័យ!', 'success');
+          } catch (err) {
+            console.error('Translation error:', err);
+            showToast(err.message || 'មានបញ្ហាក្នុងការបកប្រែ!', 'error');
+          } finally {
+            state.isTranslating = false;
+            translateBtn.style.display = 'inline-flex';
+            if (cancelTranslateBtn) cancelTranslateBtn.style.display = 'none';
+            setTimeout(() => {
+              if (progressCard) progressCard.style.display = 'none';
+            }, 3000);
+          }
+        });
+      }
+
+      if (cancelTranslateBtn) {
+        cancelTranslateBtn.addEventListener('click', () => {
+          translator.abort();
+          showToast('បានផ្អាកការបកប្រែ', 'info');
+        });
+      }
+
+      if (replaceBtn && searchInput && replaceInput) {
+        replaceBtn.addEventListener('click', () => {
+          const search = searchInput.value.trim();
+          const replace = replaceInput.value;
+
+          if (!search) {
+            showToast('សូមបញ្ចូលពាក្យដែលត្រូវស្វែងរក!', 'error');
+            return;
+          }
+
+          let count = 0;
+          const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+
+          state.cues.forEach(cue => {
+            if (cue.translation && regex.test(cue.translation)) {
+              cue.translation = cue.translation.replace(regex, replace);
+              count++;
+            }
+          });
+
+          renderCues();
+          updateStats();
+          showToast(`បានស្វែងរក និងជំនួសចំនួន ${count} កន្លែង!`, 'success');
+        });
+      }
+
+      if (shiftTimeBtn && shiftTimeInput) {
+        shiftTimeBtn.addEventListener('click', () => {
+          const deltaSec = parseFloat(shiftTimeInput.value);
+          if (isNaN(deltaSec) || deltaSec === 0) {
+            showToast('សូមបញ្ចូលចំនួនវិនាទីដែលត្រូវរំកិល (ឧ. +1 ឬ -0.5)', 'error');
+            return;
+          }
+
+          const deltaMs = Math.round(deltaSec * 1000);
+          state.cues = SRTParser.shiftTime(state.cues, deltaMs);
+          renderCues();
+          showToast(`បានរំកិលម៉ោង ${deltaSec > 0 ? '+' : ''}${deltaSec}s ដោយជោគជ័យ!`, 'success');
+        });
+      }
+
+      if (exportModalBtn && exportModal) {
+        exportModalBtn.addEventListener('click', () => {
+          if (state.cues.length === 0) {
+            showToast('សូមបញ្ចូល SRT ជាមុនសិន!', 'error');
+            return;
+          }
+          exportModal.classList.add('open');
+        });
+      }
+
+      if (closeExportModalBtn && exportModal) {
+        closeExportModalBtn.addEventListener('click', () => exportModal.classList.remove('open'));
+      }
+
+      function downloadFile(filename, content, mimeType = 'text/plain;charset=utf-8') {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`បានទាញយកឯកសារ "${filename}"`, 'success');
+      }
+
+      if (downloadKhmerSrtBtn) {
+        downloadKhmerSrtBtn.addEventListener('click', () => {
+          const srtContent = SRTParser.stringify(state.cues, 'target');
+          downloadFile(`${state.fileName}_Khmer.srt`, srtContent);
+          if (exportModal) exportModal.classList.remove('open');
+        });
+      }
+
+      if (downloadBilingualSrtBtn) {
+        downloadBilingualSrtBtn.addEventListener('click', () => {
+          const srtContent = SRTParser.stringify(state.cues, 'bilingual_kh_src');
+          downloadFile(`${state.fileName}_Bilingual.srt`, srtContent);
+          if (exportModal) exportModal.classList.remove('open');
+        });
+      }
+
+      if (downloadTxtBtn) {
+        downloadTxtBtn.addEventListener('click', () => {
+          const txtContent = SRTParser.toPlainText(state.cues, true);
+          downloadFile(`${state.fileName}_Khmer.txt`, txtContent);
+          if (exportModal) exportModal.classList.remove('open');
+        });
+      }
+
+      if (copyClipboardBtn) {
+        copyClipboardBtn.addEventListener('click', async () => {
+          const srtContent = SRTParser.stringify(state.cues, 'target');
+          try {
+            await navigator.clipboard.writeText(srtContent);
+            showToast('បានចម្លង SRT ខ្មែរទៅកាន់ Clipboard!', 'success');
+            if (exportModal) exportModal.classList.remove('open');
+          } catch (e) {
+            showToast('មិនអាចចម្លងបានទេ!', 'error');
+          }
+        });
+      }
+
+      if (previewModalBtn && previewModal) {
+        previewModalBtn.addEventListener('click', () => {
+          if (state.cues.length === 0) {
+            showToast('សូមបញ្ចូល SRT ជាមុនសិនដើម្បីចាក់មើល!', 'error');
+            return;
+          }
+          previewModal.classList.add('open');
+          initPlayerTimeline();
+        });
+      }
+
+      if (closePreviewModalBtn && previewModal) {
+        closePreviewModalBtn.addEventListener('click', () => {
+          previewModal.classList.remove('open');
+          pausePlayer();
+        });
+      }
+
+      if (videoFileInput && previewVideo && simulatedPlayer) {
+        videoFileInput.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const url = URL.createObjectURL(file);
+            previewVideo.src = url;
+            previewVideo.style.display = 'block';
+            simulatedPlayer.style.display = 'none';
+            showToast(`បានភ្ជាប់វីដេអូ: ${file.name}`, 'success');
+          }
+        });
+      }
+
+      function initPlayerTimeline() {
+        if (!playerProgress) return;
+        const maxMs = state.cues.length > 0 ? state.cues[state.cues.length - 1].endMs : 60000;
+        playerProgress.max = maxMs;
+        playerProgress.value = state.currentTimeMs;
+        updatePlayerTimeDisplay();
+      }
+
+      function updatePlayerTimeDisplay() {
+        if (playerTimeDisplay) {
+          const current = SRTParser.msToTime(state.currentTimeMs);
+          playerTimeDisplay.textContent = current;
+        }
+        updateSubtitlesOverlay(state.currentTimeMs);
+      }
+
+      function updateSubtitlesOverlay(currentMs) {
+        if (!subtitleOverlay) return;
+        const activeCue = state.cues.find(c => currentMs >= c.startMs && currentMs <= c.endMs);
+        if (activeCue) {
+          const khText = activeCue.translation || activeCue.text;
+          const srcText = activeCue.text;
+          subtitleOverlay.innerHTML = `
+            <div class="subtitle-caption">
+              <div>${escapeHtml(khText)}</div>
+              <div style="font-size: 0.8em; opacity: 0.7; margin-top: 4px;">${escapeHtml(srcText)}</div>
+            </div>
+          `;
+
+          document.querySelectorAll('.cue-card.active-play').forEach(el => el.classList.remove('active-play'));
+          const activeCard = document.getElementById(`cue-item-${activeCue.id}`);
+          if (activeCard) {
+            activeCard.classList.add('active-play');
+            activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        } else {
+          subtitleOverlay.innerHTML = '';
+        }
+      }
+
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => {
+          if (state.isPlaying) {
+            pausePlayer();
+          } else {
+            startPlayer();
+          }
+        });
+      }
+
+      function startPlayer() {
+        state.isPlaying = true;
+        if (playPauseBtn) playPauseBtn.textContent = '⏸️ ផ្អាក';
+
+        if (previewVideo && previewVideo.src && previewVideo.style.display !== 'none') {
+          previewVideo.currentTime = state.currentTimeMs / 1000;
+          previewVideo.play();
+        }
+
+        const interval = 50;
+        state.previewTimer = setInterval(() => {
+          if (previewVideo && previewVideo.src && previewVideo.style.display !== 'none') {
+            state.currentTimeMs = Math.round(previewVideo.currentTime * 1000);
+          } else {
+            state.currentTimeMs += interval;
+            const maxMs = state.cues.length > 0 ? state.cues[state.cues.length - 1].endMs + 2000 : 60000;
+            if (state.currentTimeMs > maxMs) {
+              state.currentTimeMs = 0;
+            }
+          }
+          if (playerProgress) playerProgress.value = state.currentTimeMs;
+          updatePlayerTimeDisplay();
+        }, interval);
+      }
+
+      function pausePlayer() {
+        state.isPlaying = false;
+        if (playPauseBtn) playPauseBtn.textContent = '▶️ ចាក់';
+        if (state.previewTimer) clearInterval(state.previewTimer);
+        if (previewVideo && previewVideo.src) previewVideo.pause();
+      }
+
+      if (playerProgress) {
+        playerProgress.addEventListener('input', (e) => {
+          state.currentTimeMs = parseInt(e.target.value, 10);
+          if (previewVideo && previewVideo.src && previewVideo.style.display !== 'none') {
+            previewVideo.currentTime = state.currentTimeMs / 1000;
+          }
+          updatePlayerTimeDisplay();
+        });
+      }
+
+      window.addEventListener('click', (e) => {
+        if (e.target === exportModal && exportModal) exportModal.classList.remove('open');
+        if (e.target === previewModal && previewModal) {
+          previewModal.classList.remove('open');
+          pausePlayer();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
