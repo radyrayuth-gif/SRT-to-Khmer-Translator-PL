@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="km" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRT to Khmer Translator | កម្មវិធីបកប្រែ Subtitle ទៅជាភាសាខ្មែរ</title>
+  <meta name="description" content="កម្មវិធីគេហទំព័របកប្រែឯកសារអត្ថបទរឿង SRT / VTT ពីភាសាចិន អង់គ្លេស ទៅជាភាសាខ្មែរដោយឥតគិតថ្លៃ និងរក្សា Timecode ត្រឹមត្រូវ ១០០%">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-icon">🇰🇭</div>
+        <div>
+          <h1 class="brand-title">
+            <span class="gradient-text">SRT to Khmer</span>
+            <span>Translator</span>
+            <span class="badge-tag">AI Powered</span>
+          </h1>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+            បកប្រែ Subtitle ទៅជាភាសាខ្មែរដោយស្វ័យប្រវត្តិ រក្សា Timecode ត្រឹមត្រូវ ១០០%
+          </p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" id="loadSampleBtn">
+          <span>✨</span> សាកល្បងឧទាហរណ៍
+        </button>
+        <button class="btn btn-secondary btn-sm" id="themeToggleBtn">
+          <span>🌙</span> ងងឹត
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Input Grid -->
+    <div class="hero-grid">
+      <!-- Translation Settings Card (Gemini AI Dedicated) -->
+      <section class="glass-card settings-panel">
+        <h3 class="panel-title">
+          <span>🤖</span> កំណត់ការបកប្រែជាមួយ Google Gemini AI
+        </h3>
+
+        <!-- Gemini Config Box -->
+        <div class="ai-config-box" id="geminiConfigBox" style="display: flex;">
+          <div class="ai-config-grid">
+            <div class="form-group">
+              <label class="form-label">Google Gemini API Key</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="password" class="form-input" id="aiApiKeyInput" placeholder="បញ្ចូល Gemini API Key (AIzaSy...)">
+                <button class="btn btn-secondary btn-sm" id="testAiKeyBtn" title="សាកល្បងតេស្ត Key">🔍 តេស្ត</button>
+                <button class="btn btn-secondary btn-sm" id="saveAiKeyBtn">រក្សាទុក</button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label class="form-label">ម៉ូឌែល (Gemini Model)</label>
+                <select class="form-select" id="aiModelSelect">
+                  <option value="gemini-3.6-flash" selected>Gemini 3.6 Flash (ណែនាំ - ផ្លូវការ & សន្សំសំចៃ)</option>
+                  <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (លឿនបំផុត)</option>
+                  <option value="gemini-3.7-flash">Gemini 3.7 Flash (គុណភាពខ្ពស់)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">រចនាបថសំឡេង (Tone)</label>
+                <select class="form-select" id="aiToneSelect">
+                  <option value="drama" selected>បែបភាពយន្តភាគ (Drama)</option>
+                  <option value="natural">ភាសានិយាយប្រចាំថ្ងៃ</option>
+                  <option value="action">បែបវាយប្រហារ (Action)</option>
+                  <option value="formal">ផ្លូវការ / គួរសម</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn btn-primary btn-lg btn-translate-glow" id="translateBtn" disabled>
+            <span>🚀</span> ចាប់ផ្ដើមបកប្រែជាភាសាខ្មែរ (Gemini AI)
+          </button>
+          <button class="btn btn-danger" id="cancelTranslateBtn" style="display: none;">
+            <span>⏹️</span> បញ្ឈប់ការបកប្រែ
+          </button>
+        </div>
+      </section>
+
+      <!-- Input Card (Upload / Paste SRT) -->
+      <section class="glass-card">
+        <div class="tabs-header">
+          <button class="tab-btn active" id="tabUploadBtn">
+            <span>📁</span> បញ្ចូលឯកសារ (Upload SRT)
+          </button>
+          <button class="tab-btn" id="tabPasteBtn">
+            <span>📝</span> បិទភ្ជាប់អត្ថបទ (Paste Text)
+          </button>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="uploadTabContent">
+          <div class="dropzone-container" id="dropzone" onclick="document.getElementById('srtFileInput').click()">
+            <div class="dropzone-icon">📥</div>
+            <div class="dropzone-title">ចុចទីនេះ ឬទម្លាក់ឯកសារ .srt នៅទីនេះ</div>
+            <div class="dropzone-sub">គាំទ្រឯកសារ .srt, .vtt, .txt (UTF-8)</div>
+            <button class="btn btn-secondary btn-sm" style="margin-top: 14px; pointer-events: none;" type="button">
+              📂 ជ្រើសរើសឯកសារពីកុំព្យូទ័រ
+            </button>
+            <input type="file" id="srtFileInput" accept=".srt,.vtt,.txt" style="display: none;">
+          </div>
+        </div>
+
+        <!-- Paste Tab -->
+        <div id="pasteTabContent" style="display: none;">
+          <textarea id="srtPasteArea" class="srt-textarea" placeholder="បិទភ្ជាប់ (Paste) អត្ថបទ SRT របស់អ្នកនៅទីនេះ...&#10;&#10;1&#10;00:00:00,333 --> 00:00:01,700&#10;在豪门家做后妈的女孩..."></textarea>
+          <div class="input-actions-bar">
+            <button class="btn btn-ghost btn-sm" id="clearInputBtn">🗑️ សម្អាត</button>
+            <button class="btn btn-primary btn-sm" id="parsePasteBtn">⚡ វិភាគអត្ថបទ SRT</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Live Progress Bar -->
+    <div class="glass-card progress-card" id="progressCard" style="display: none;">
+      <div class="progress-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="spinner"></div>
+          <span>កំពុងបកប្រែអត្ថបទរឿងទៅជាភាសាខ្មែរ...</span>
+        </div>
+        <span id="progressPercentText" style="color: var(--accent-cyan); font-family: var(--font-mono);">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+      <div class="progress-status-text" id="progressStatusDetail">
+        រៀបចំទិន្នន័យ...
+      </div>
+    </div>
+
+    <!-- Subtitle Workspace & Editor -->
+    <section class="workspace-container" id="workspaceCard" style="display: none;">
+      <!-- Toolbar -->
+      <div class="workspace-toolbar">
+        <div class="toolbar-left">
+          <div class="stats-badge">
+            ចំនួនសរុប: <strong id="totalCuesCount">0</strong> ជួរ
+          </div>
+          <div class="stats-badge">
+            បានបកប្រែ: <strong id="translatedCount">0</strong> ជួរ
+          </div>
+
+          <div class="search-replace-bar">
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="ស្វែងរកពាក្យ...">
+            <span>➡️</span>
+            <input type="text" id="replaceInput" placeholder="ជំនួសដោយ...">
+            <button class="btn btn-secondary btn-sm" id="replaceBtn">ជំនួស</button>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <!-- Time Shift -->
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">រំកិលម៉ោង:</span>
+            <input type="number" id="shiftTimeInput" step="0.5" placeholder="+/- វិនាទី" style="width: 80px; padding: 6px 8px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem;">
+            <button class="btn btn-secondary btn-sm" id="shiftTimeBtn">កែម៉ោង</button>
+          </div>
+
+          <button class="btn btn-accent btn-sm" id="previewModalBtn">
+            <span>🎬</span> ចាក់មើល (Live Preview)
+          </button>
+          <button class="btn btn-success btn-sm" id="exportModalBtn">
+            <span>💾</span> ទាញយក (Export)
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtitles List Table -->
+      <div class="subtitle-list" id="cueList">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Export Options Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>💾</span> ជម្រើសទាញយកឯកសារ (Export Options)</h3>
+        <button class="icon-btn" id="closeExportModalBtn">✕</button>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">
+        សូមជ្រើសរើសទម្រង់ឯកសារដែលអ្នកចង់ទាញយក៖
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button class="btn btn-primary" id="downloadKhmerSrtBtn" style="justify-content: flex-start; padding: 14px 18px;">
+          <span>🇰🇭</span>
+          <div style="text-align: left; margin-left: 8px;">
+            <div style="font-weight: 700;">ទាញយកជា SRT ខ្មែរ (.srt)</div>
+            <div style="font-size: 0.78rem; opacity: 0.85;">សម្រាប់ដាក់ក្នុងវីដេអូ ឬ Player នានា</div>
+          </div>
+        </button>
+
+        <button class="btn btn-secondary" id="downloadBilingualSrtBtn" style="justify-content: flex-start; padding: 14px 18px;">
+          <span>🌐</span>
+          <div style="text-align: left; margin-left: 8px;">
+            <div style="font-weight: 700;">ទាញយកជា SRT ពីរភាសា (Bilingual: ខ្មែរ + ចិន/ដើម)</div>
+            <div style="font-size: 0.78rem; opacity: 0.85;">បង្ហាញអក្សរខ្មែរនៅខាងលើ និងភាសាដើមនៅខាងក្រោម</div>
+          </div>
+        </button>
+
+        <button class="btn btn-secondary" id="downloadTxtBtn" style="justify-content: flex-start; padding: 14px 18px;">
+          <span>📄</span>
+          <div style="text-align: left; margin-left: 8px;">
+            <div style="font-weight: 700;">ទាញយកជា Text សុទ្ធ (.txt)</div>
+            <div style="font-size: 0.78rem; opacity: 0.85;">អត្ថបទខ្មែរគ្មាន Timecode សម្រាប់អាន ឬបញ្ចូលក្នុងសំឡេង AI</div>
+          </div>
+        </button>
+
+        <button class="btn btn-ghost" id="copyClipboardBtn" style="justify-content: flex-start; padding: 14px 18px; border: 1px solid var(--border-color);">
+          <span>📋</span>
+          <div style="text-align: left; margin-left: 8px;">
+            <div style="font-weight: 700;">ចម្លង SRT ទាំងអស់ (Copy to Clipboard)</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Video / Caption Preview Modal -->
+  <div class="modal-overlay" id="previewModal">
+    <div class="modal-card" style="max-width: 850px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><span>🎬</span> ចាក់មើល Subtitle ផ្ទាល់ (Live Preview Player)</h3>
+        <button class="icon-btn" id="closePreviewModalBtn">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Cinema Screen wrapper -->
+        <div class="video-screen-wrapper">
+          <video id="previewVideo" class="video-element" style="display: none;"></video>
+          <div class="simulated-screen" id="simulatedPlayer">
+            <div style="font-size: 40px; margin-bottom: 8px;">🎥</div>
+            <div style="font-size: 0.95rem; color: #cbd5e1;">Cinema Player Simulation</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">(អាចភ្ជាប់វីដេអូ ឬចាក់តេស្ត Subtitle ផ្ទាល់)</div>
+          </div>
+          <!-- Subtitle Caption Overlay -->
+          <div class="subtitle-overlay" id="subtitleOverlay"></div>
+        </div>
+
+        <!-- Player Controls -->
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="btn btn-primary btn-sm" id="playPauseBtn">▶️ ចាក់</button>
+          <span id="playerTimeDisplay" style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-cyan);">00:00:00,000</span>
+          <input type="range" id="playerProgress" min="0" max="60000" value="0" style="flex: 1; accent-color: var(--primary);">
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <div>
+            <span>ភ្ជាប់វីដេអូផ្ទាល់ខ្លួន: </span>
+            <input type="file" id="videoFileInput" accept="video/*,audio/*" style="font-size: 0.8rem; color: var(--text-secondary);">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/srt-parser.js"></script>
+  <script src="js/translator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
