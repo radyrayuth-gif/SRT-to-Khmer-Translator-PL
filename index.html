@@ -1974,7 +1974,8 @@
           .replace(/[\u0E00-\u0E7F]/g, '')
           .replace(/[\u4E00-\u9FFF\u3400-\u4DBF]/g, '')
           .replace(/ទទាក់ទាញ/g, 'ទាក់ទាញ')
-          .replace(/ដ៏\s+មួយរូប/g, 'កំហូចមួយរូប');
+          .replace(/ដ៏\s+មួយរូប/g, 'កំហូចមួយរូប')
+          .replace(/(?<!ខ្លួន|តែ|ដោយ|រៀង|រៀងៗ)ឯង(?![ក-អ])/g, 'អ្នក'); // Avoid ឯង as pronoun, use អ្នក instead
 
         res = res.replace(/([0-9០-៩]+)/g, (match) => {
           return this.numberToKhmerWords(match);
@@ -2040,9 +2041,9 @@
           drama: `រចនាបថភាពយន្តភាគខ្មែរ (Cambodian Drama/Cinema Dubbing style):
 - ប្រើពាក្យរលូន ពិរោះ មានចង្វាក់ ស្តាប់ទៅមានមនោសញ្ចេតនា និងទាក់ទាញ ដូចអ្នកបញ្ចូលសំឡេងរឿងភាគទូរទស្សន៍
 - មិនត្រូវបកប្រែពាក្យមួយៗចំៗតាមម៉ាស៊ីនដាច់ខាត (Never literal machine translation)។ ត្រូវបកប្រែសម្រួលន័យទាំងមូលឱ្យពិរោះ ងាយយល់ និងត្រូវបរិបទតួអង្គ
-- ប្រើសព្វនាមសមស្រប៖ លោកប្រធាន, អ្នកប្រុសតូច, ត្រកូលអភិជន, ម្ដាយចុង, នាង, គាត់, ឯង, បង, អូន
+- ប្រើសព្វនាមសមស្រប៖ លោកប្រធាន, អ្នកប្រុសតូច, ត្រកូលអភិជន, ម្ដាយចុង, នាង, គាត់, អ្នក, បង, អូន (ដាច់ខាតកុំប្រើពាក្យ "ឯង" ឬ "ហ្អែង" សម្រាប់ជាសព្វនាម)
 - កែសម្រួលពាក្យចិនកាត់សំឡេងខុស (Speech-to-Text typos) ឱ្យត្រូវន័យសាច់រឿង`,
-          natural: 'ភាសានិយាយប្រចាំថ្ងៃបែបធម្មជាតិ រលូន ងាយយល់ ខ្លីល្មមសម្រាប់ Subtitle និងពិរោះស្តាប់',
+          natural: 'ភាសានិយាយប្រចាំថ្ងៃបែបធម្មជាតិ រលូន ងាយយល់ ខ្លីល្មមសម្រាប់ Subtitle និងពិរោះស្តាប់ (ប្រើ "អ្នក", កុំប្រើ "ឯង")',
           action: 'ខ្លី មុតស្រួច មានថាមពល រស់រវើក សមរម្យសម្រាប់ខ្សែភាពយន្តវាយប្រហារ/សកម្មភាព',
           formal: 'ភាសាផ្លូវការ គួរសម ត្រឹមត្រូវតាមក្បួនវេយ្យាករណ៍ និងច្បាស់លាស់'
         };
@@ -2053,19 +2054,23 @@ Your goal is to translate Asian/Chinese drama subtitles into breathtaking, natur
 CRITICAL STANDARDS FOR EXCELLENT KHMER DUBBING:
 1. Tone & Melodious Flow:
    ${toneInstructions[tone] || toneInstructions.drama}
-2. 100% PURE KHMER SCRIPT (អក្សរខ្មែរសុទ្ធ ១០០%):
+2. PRONOUN RULES (ច្បាប់សព្វនាម - សំខាន់បំផុត):
+   - ដាច់ខាតកុំប្រើពាក្យ "ឯង" ឬ "ហ្អែង" សម្រាប់សព្វនាមបុគ្គលទី២ (You/Second-person pronoun)។
+   - ពាក្យ "你" ត្រូវបកប្រែជា «អ្នក» (ឬ «លោក/លោកស្រី/នាង/បង/អូន» តាមទំនាក់ទំនងតួអង្គ)។ ហាមបកប្រែជា «ឯង» ដាច់ខាត!
+   - ពាក្យ "你们" ត្រូវបកប្រែជា «អ្នកទាំងអស់គ្នា» ឬ «ពួកអ្នក»។
+3. 100% PURE KHMER SCRIPT (អក្សរខ្មែរសុទ្ធ ១០០%):
    - Absolutely NO English/Latin letters. (e.g. Ultraman -> អ៊ុលត្រាមែន, Tiga -> ឌីហ្កា, VIP -> វីអាយភី, OK -> អូខេ).
    - NEVER leave any untranslated Chinese characters (e.g. 劝 -> លួងលោម, 谁劝 -> នរណាលួងលោម, 团列 -> កំហូច).
-3. SPELL OUT ALL NUMBERS & SYMBOLS AS KHMER SPOKEN WORDS:
+4. SPELL OUT ALL NUMBERS & SYMBOLS AS KHMER SPOKEN WORDS:
    - Numbers: 3 -> បី, 10 -> ដប់, 100 -> មួយរយ, 2024 -> ពីរពាន់ម្ភៃបួន, 35 -> សាមសិបប្រាំ, 3分钟 -> បីនាទី.
    - Symbols: % -> ភាគរយ, $ -> ដុល្លារ, + -> បូក, & -> និង.
-4. Natural Dialogue Flow (Avoid Literal Translation):
+5. Natural Dialogue Flow (Avoid Literal Translation):
    - Machine style (BAD): "នៅផ្ទះយក្សធ្វើម្ដាយចុងក្មេងស្រី"
    - Cinematic Dubbing (GOOD): "នារីម្នាក់ដែលទៅធ្វើជាម្ដាយចុងក្នុងត្រកូលអភិជន"
-5. Subtitle Timing: Keep lines punchy, balanced, and easy to read aloud in 1-2 seconds.
-6. Translate EVERY single item in the array without skipping.
-7. Input format: [{"id": 1, "text": "..."}]
-8. Output format: Return ONLY a valid JSON array: [{"id": 1, "translated": "..."}]`;
+6. Subtitle Timing: Keep lines punchy, balanced, and easy to read aloud in 1-2 seconds.
+7. Translate EVERY single item in the array without skipping.
+8. Input format: [{"id": 1, "text": "..."}]
+9. Output format: Return ONLY a valid JSON array: [{"id": 1, "translated": "..."}]`;
 
         let activeModel = (model || 'gemini-3.6-flash').replace(/^models\//, '').trim();
 
